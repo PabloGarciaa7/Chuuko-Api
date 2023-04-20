@@ -1,0 +1,105 @@
+const { Producto } = require("../models/models");
+
+//Get de todos los Productos y poder filtrar
+exports.selectProductos = (req, res) => {
+  const { nombre, precio, estado = "Disponible", categoria } = req.query;
+
+  // Crear un objeto con las propiedades de la consulta que no son nulas o vacías
+  const consulta = {};
+  if (nombre) consulta.nombre = nombre;
+  if (precio) consulta.precio = precio;
+  if (estado !== undefined && estado !== "") consulta.estado = estado;
+  if (categoria) consulta.categoria = categoria;
+
+  Producto.find(consulta)
+    .populate("producto.idCategoria")
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((error) => res.status(500).json({ error: error.message }));
+};
+
+//Get un Producto
+exports.selectProducto = (req, res) => {
+  const { id } = req.params.id;
+  Producto.findOne(id)
+    .populate("idCategoria")
+    .then((data) => {
+      console.log(data.idCategoria.nombreCategoria);
+      res.json(data);
+    })
+    .catch((error) => res.json({ message: error }));
+};
+
+//Get Productos de un Usuario
+exports.selectProductosDeUsuario = (req, res) => {
+  const id = req.params.id;
+  Producto.find({ idUsuarioVendedor: id })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+};
+
+//Get ProductosVendidos de un usuario
+exports.selectProductosVendidosDeUsuario = (req, res) => {
+  const id = req.params.id;
+  Producto.find({ idUsuarioVendedor: id, estado: "Comprado" })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+};
+
+//Get ProductosComprados de un usuario
+exports.selectProductosCompradosDeUsuario = (req, res) => {
+  const id = req.params.id;
+  Producto.find({ idUsuarioComprador: id, estado: "Comprado" })
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+};
+
+//Post Producto
+exports.insertProducto = (req, res) => {
+  const producto = Producto(req.body);
+  producto
+    .save()
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+};
+
+//Put un Producto
+exports.updateProducto = (req, res) => {
+  const { id } = req.params.id;
+  const {
+    nombre,
+    descripcion,
+    precio,
+    imagen,
+    Categoria,
+    estado,
+    fechaCreacion,
+    fechaCompra,
+  } = req.body;
+  Producto.findOneAndUpdate(
+    { id },
+    {
+      $set: {
+        nombre,
+        descripcion,
+        precio,
+        imagen,
+        Categoria,
+        estado,
+        fechaCreacion,
+        fechaCompra,
+      },
+    }
+  )
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+};
+
+//Delete un Producto
+exports.deleteProducto = (req, res) => {
+  const { id } = req.params.id;
+  Producto.findOneAndRemove(id)
+    .then((data) => res.json(data))
+    .catch((error) => res.json({ message: error }));
+};
