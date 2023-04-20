@@ -2,20 +2,18 @@ const { Producto } = require("../models/models");
 
 //Get de todos los Productos y poder filtrar
 exports.selectProductos = (req, res) => {
-  const { nombre, precio, estado = "Disponible", categoria } = req.query;
+  const { nombre, precio, estado, idCategoria } = req.query;
 
   // Crear un objeto con las propiedades de la consulta que no son nulas o vacías
   const consulta = {};
-  if (nombre) consulta.nombre = nombre;
-  if (precio) consulta.precio = precio;
+  if (nombre !== undefined && nombre !== "") consulta.nombre = nombre;
+  if (precio !== undefined && precio !== "") consulta.precio = precio;
   if (estado !== undefined && estado !== "") consulta.estado = estado;
-  if (categoria) consulta.categoria = categoria;
+  if (idCategoria !== undefined && idCategoria !== "") consulta.idCategoria = idCategoria;
 
   Producto.find(consulta)
-    .populate("producto.idCategoria")
-    .then((data) => {
-      res.json(data);
-    })
+    .populate("idCategoria")
+    .then((data) => res.json(data))
     .catch((error) => res.status(500).json({ error: error.message }));
 };
 
@@ -23,11 +21,9 @@ exports.selectProductos = (req, res) => {
 exports.selectProducto = (req, res) => {
   const { id } = req.params.id;
   Producto.findOne(id)
-    .populate("idCategoria")
-    .then((data) => {
-      console.log(data.idCategoria.nombreCategoria);
-      res.json(data);
-    })
+  .populate("idCategoria")
+  .populate("idUsuarioVendedor")
+    .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 };
 
