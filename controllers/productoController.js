@@ -10,8 +10,13 @@ exports.selectProductos = (req, res) => {
   if (estado !== undefined && estado !== "") consulta.estado = estado;
   if (idCategoria !== undefined && idCategoria !== "") consulta.idCategoria = idCategoria;
 
-  if (precio_min !== undefined && precio_min !== "" && precio_max !== undefined && precio_max !== "") {
-    consulta.precio = { $gte: Number(precio_min), $lte: Number(precio_max) };
+  if ((precio_min !== undefined && precio_min !== "") || (precio_max !== undefined && precio_max !== "")) {
+    
+    const filtroPrecio = {};
+    if (precio_min !== undefined && precio_min !== "") filtroPrecio["$gte"] = Number(precio_min);
+    if (precio_max !== undefined && precio_max !== "") filtroPrecio["$lte"] = Number(precio_max);
+    
+    consulta.precio = filtroPrecio;
   }
 
   Producto.find(consulta)
