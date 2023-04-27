@@ -1,15 +1,18 @@
 const { Producto } = require("../models/models");
 
-//Get de todos los Productos y poder filtrar
+//Get de todos los Productos y poder filtrar por cualquier propiedad
 exports.selectProductos = (req, res) => {
-  const { nombre, precio, estado, idCategoria } = req.query;
+  const { nombre, precio_min, precio_max, estado, idCategoria } = req.query;
 
   // Crear un objeto con las propiedades de la consulta que no son nulas o vacías
   const consulta = {};
   if (nombre !== undefined && nombre !== "") consulta.nombre = nombre;
-  if (precio !== undefined && precio !== "") consulta.precio = precio;
   if (estado !== undefined && estado !== "") consulta.estado = estado;
   if (idCategoria !== undefined && idCategoria !== "") consulta.idCategoria = idCategoria;
+
+  if (precio_min !== undefined && precio_min !== "" && precio_max !== undefined && precio_max !== "") {
+    consulta.precio = { $gte: Number(precio_min), $lte: Number(precio_max) };
+  }
 
   Producto.find(consulta)
     .populate("idCategoria")
