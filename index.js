@@ -10,10 +10,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_URI = process.env.DB_URI; 
 
-mongoose.connect(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
-    .then(db => console.log("Conexión establecida a BD correctamente"))
-    .catch(error => console.log("Error al conectarse a la BD" + error));
+async function conexionMongoose() {
+    try {
+      await mongoose.connect(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
+      console.log("Conexión establecida a BD correctamente");
+    } catch(error) {
+      console.log("Error al conectarse a la BD" + error);
+    }
+  }
 
+conexionMongoose();
 
 app.use(cors());
 app.use(express.json());
