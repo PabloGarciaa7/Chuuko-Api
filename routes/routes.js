@@ -8,6 +8,7 @@ const categoriaController = require("../controllers/categoriaController.js");
 const router = express.Router();
 
 router.get("/usuarios", cors(), usuarioController.selectUsuarios);
+router.get("/usuarios/usuario", cors(), usuarioController.selectUsuarioPorEmail);
 router.get("/usuarios/:id", cors(), usuarioController.selectUsuario);
 router.post("/usuarios", cors(), usuarioController.insertUsuario);
 router.put("/usuarios/:id", cors(), usuarioController.updateUsuario);

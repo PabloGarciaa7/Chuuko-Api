@@ -16,11 +16,6 @@ const Usuario = mongoose.model(
       unique: true,
       required: true,
     },
-    usuario: {
-      type: String,
-      unique: true,
-      required: true,
-    },
     password: String,
   })
 );

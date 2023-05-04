@@ -14,6 +14,18 @@ exports.selectUsuario = (req, res) => {
     .catch((error) => res.json({ message: error }));
 };
 
+exports.selectUsuarioPorEmail = (req, res) => {
+  const { email } = req.query;
+
+  const consulta = {};
+
+  if (email !== undefined && email !== "") consulta.email = email;
+
+  Usuario.findOne(consulta)
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).json({ error: error.message }));
+};
+
 //Post Usuario
 exports.insertUsuario = (req, res) =>{
   const usuario = Usuario(req.body);
@@ -26,7 +38,7 @@ exports.insertUsuario = (req, res) =>{
 //Put un Usuario
 exports.updateUsuario = (req, res) => {
   const { id } = req.params.id;
-  const { nombre, apellidos, localidad, telefono, email, usuario, password } =
+  const { nombre, apellidos, localidad, telefono, email, password } =
     req.body;
   Usuario.findOneAndUpdate(
     { id },
@@ -37,7 +49,6 @@ exports.updateUsuario = (req, res) => {
         localidad,
         telefono,
         email,
-        usuario,
         password,
       },
     }
