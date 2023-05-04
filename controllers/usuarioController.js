@@ -14,6 +14,7 @@ exports.selectUsuario = (req, res) => {
     .catch((error) => res.json({ message: error }));
 };
 
+//Get un Usuario por Email
 exports.selectUsuarioPorEmail = (req, res) => {
   const { email } = req.query;
 
@@ -22,12 +23,20 @@ exports.selectUsuarioPorEmail = (req, res) => {
   if (email !== undefined && email !== "") consulta.email = email;
 
   Usuario.findOne(consulta)
-    .then((data) => res.json(data))
-    .catch((error) => res.status(500).json({ error: error.message }));
+    .then((data) => {
+      if (!data) {
+        res.status(500).json({
+            message: "No se encontró ningún usuario con ese email",
+          });
+      } else {
+        res.json(data);
+      }
+    })
+    .catch((error) => res.json({ message: error }));
 };
 
 //Post Usuario
-exports.insertUsuario = (req, res) =>{
+exports.insertUsuario = (req, res) => {
   const usuario = Usuario(req.body);
   usuario
     .save()
@@ -38,8 +47,7 @@ exports.insertUsuario = (req, res) =>{
 //Put un Usuario
 exports.updateUsuario = (req, res) => {
   const { id } = req.params.id;
-  const { nombre, apellidos, localidad, telefono, email, password } =
-    req.body;
+  const { nombre, apellidos, localidad, telefono, email, password } = req.body;
   Usuario.findOneAndUpdate(
     { id },
     {
@@ -60,7 +68,7 @@ exports.updateUsuario = (req, res) => {
 //Delete un Usuario
 exports.deleteUsuario = (req, res) => {
   const { id } = req.params.id;
-  Usuario.findOneAndRemove( id )
+  Usuario.findOneAndRemove(id)
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 };
