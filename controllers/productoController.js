@@ -28,11 +28,23 @@ exports.selectProductos = (req, res) => {
 //Get un Producto
 exports.selectProducto = (req, res) => {
   const { id } = req.params.id;
+
+  if (id === undefined || id === "") {
+    res.status(400).json({message: "No se encontró ningun producto"});
+    return;
+  }
+
   Producto.findOne(id)
   .populate("idCategoria")
   .populate("idUsuarioVendedor")
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+  .then((data) => {
+      if (!data) {
+        res.status(400).json({message: "No se encontró ningun producto"})
+      }else{
+        res.json(data);
+      }
+    })
+    .catch((error) => res.status(500).json({ message: error }));
 };
 
 //Get Productos de un Usuario

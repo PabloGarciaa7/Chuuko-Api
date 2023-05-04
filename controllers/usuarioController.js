@@ -9,30 +9,43 @@ exports.selectUsuarios = (req, res) =>
 //Get un Usuario
 exports.selectUsuario = (req, res) => {
   const { id } = req.params.id;
+
+  if (id === undefined || id === "") {
+    res.status(400).json({message: "No se encontró ningun usuario"});
+    return;
+  }
   Usuario.findOne(id)
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+    .then((data) => {
+      if (!data) {
+        res.status(400).json({message: "No se encontró ningun usuario"})
+      }else{
+        res.json(data);
+      }
+    })
+    .catch((error) => res.status(500).json({ message: error }));
 };
 
 //Get un Usuario por Email
 exports.selectUsuarioPorEmail = (req, res) => {
   const { email } = req.query;
 
-  const consulta = {};
+  if (email === undefined || email === "") {
+    // Si no se proporciona un email, enviamos una respuesta con un estado 400 y un mensaje de error
+    res.status(400).json({ message: "Debes proporcionar un email para buscar un usuario" });
+    return;
+  }
 
-  if (email !== undefined && email !== "") consulta.email = email;
+  const consulta = { email: email.toLowerCase() };
 
   Usuario.findOne(consulta)
     .then((data) => {
       if (!data) {
-        res.status(500).json({
-            message: "No se encontró ningún usuario con ese email",
-          });
+        res.status(404).json({ message: "No se encontró ningún usuario con el email proporcionado" });
       } else {
         res.json(data);
       }
     })
-    .catch((error) => res.json({ message: error }));
+    .catch((error) => res.status(500).json({ error: error.message }));
 };
 
 //Post Usuario

@@ -9,9 +9,21 @@ exports.selectCategorias = (req, res) =>
 //Get de una categoría
 exports.selectCategoriaPorId = (req, res) => {
   const { id } = req.params.id;
+
+  if (id === undefined || id === "") {
+    res.status(400).json({message: "No se encontró ningun categoría"});
+    return;
+  }
+
   Categoria.findOne(id)
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+  .then((data) => {
+    if (!data) {
+      res.status(400).json({message: "No se encontró ninguna categoría"})
+    }else{
+      res.json(data);
+    }
+  })
+  .catch((error) => res.status(500).json({ message: error }));
 };
 
 //Post de una categoría
