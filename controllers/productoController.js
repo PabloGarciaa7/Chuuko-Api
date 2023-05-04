@@ -48,25 +48,16 @@ exports.selectProducto = (req, res) => {
 };
 
 //Get Productos de un Usuario
-exports.selectProductosDeUsuario = (req, res) => {
-  const id = req.params.id;
-  Producto.find({ idUsuarioVendedor: id })
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
-};
+exports.selectProductosDeUsuarioPorEstado = (req, res) => {
+  const consulta = {};
+  
+  consulta.idUsuarioVendedor = req.params.id;
 
-//Get ProductosVendidos de un usuario
-exports.selectProductosVendidosDeUsuario = (req, res) => {
-  const id = req.params.id;
-  Producto.find({ idUsuarioVendedor: id, estado: "Comprado" })
-    .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
-};
+  const {estado } = req.query;
+  
+  if (estado !== undefined && estado !== "") consulta.estado = estado;
 
-//Get ProductosComprados de un usuario
-exports.selectProductosCompradosDeUsuario = (req, res) => {
-  const id = req.params.id;
-  Producto.find({ idUsuarioComprador: id, estado: "Comprado" })
+  Producto.find(consulta)
     .then((data) => res.json(data))
     .catch((error) => res.json({ message: error }));
 };
