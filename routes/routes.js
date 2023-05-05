@@ -26,6 +26,6 @@ router.post("/categorias", cors(), categoriaController.insertCategoria);
 router.put("/categorias/:id", cors(), categoriaController.updateCategoria);
 router.delete("/categorias/:id", cors(), categoriaController.deleteCategoria);
 
-router.get("/usuarios/:id/productos", cors(), productoController.selectProductosDeUsuarioPorEstado);
+router.get("/usuarios/:idUsuarioVendedor/productos", cors(), productoController.selectProductosDeUsuarioPorEstado);
 
 module.exports = router;
