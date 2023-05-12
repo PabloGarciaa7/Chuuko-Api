@@ -6,7 +6,10 @@ exports.selectProductos = (req, res) => {
 
   // Crear un objeto con las propiedades de la consulta que no son nulas o vacías
   const consulta = {};
-  if (nombre !== undefined && nombre !== "") consulta.nombre = nombre;
+  if (nombre !== undefined && nombre !== "") {
+    const regex = new RegExp(nombre, "i");
+    consulta.nombre = regex;
+  }
   if (estado !== undefined && estado !== "") consulta.estado = estado;
   if (idCategoria !== undefined && idCategoria !== "")
     consulta.idCategoria = idCategoria;
