@@ -10,11 +10,25 @@ const Usuario = mongoose.model(
       type: Number,
       unique: true,
       required: true,
+      validate: {
+        validator: function (value) {
+          const telefonoRegex = /^[0-9]{9}$/;
+          return telefonoRegex.test(value);
+        },
+        message: 'El numero de teléfono no es válido',
+      },
     },
     email: {
       type: String,
       unique: true,
       required: true,
+      validate: {
+        validator: function (value) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(value);
+        },
+        message: 'El correo electrónico no es válido',
+      },
     },
     password: String,
   })
