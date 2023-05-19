@@ -4,7 +4,6 @@ const { Producto } = require("../models/models");
 exports.selectProductos = (req, res) => {
   const { nombre, precio_min, precio_max, estado, idCategoria } = req.query;
 
-  // Crear un objeto con las propiedades de la consulta que no son nulas o vacías
   const consulta = {};
   if (nombre !== undefined && nombre !== "") {
     const regex = new RegExp(nombre, "i");
@@ -96,7 +95,7 @@ exports.insertProducto = (req, res) => {
   producto
     .save()
     .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+    .catch((error) => res.status(400).json({ message: error }));
 };
 
 //Put un Producto

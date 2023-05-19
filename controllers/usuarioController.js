@@ -4,21 +4,21 @@ const { Usuario } = require("../models/models.js");
 exports.selectUsuarios = (req, res) =>
   Usuario.find()
     .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+    .catch((error) => res.status(500).json({ message: error }));
 
 //Get un Usuario
 exports.selectUsuario = (req, res) => {
   const { id } = req.params;
 
   if (id === undefined || id === "") {
-    res.status(400).json({message: "No se encontró ningun usuario"});
+    res.status(400).json({message: "No se encontró ningún usuario"});
     return;
   }
 
   Usuario.findOne({ _id: id })
     .then((data) => {
       if (!data) {
-        res.status(400).json({message: "No se encontró ningun usuario"})
+        res.status(400).json({message: "No se encontró ningún usuario"})
       }else{
         res.json(data);
       }
@@ -31,8 +31,7 @@ exports.selectUsuarioPorEmail = (req, res) => {
   const { email } = req.query;
 
   if (email === undefined || email === "") {
-    // Si no se proporciona un email, enviamos una respuesta con un estado 400 y un mensaje de error
-    res.status(400).json({ message: "Debes proporcionar un email para buscar un usuario" });
+    res.status(400).json({ message: "No se encontró ningún email asociado" });
     return;
   }
 
@@ -46,7 +45,7 @@ exports.selectUsuarioPorEmail = (req, res) => {
         res.json(data);
       }
     })
-    .catch((error) => res.status(500).json({ error: error.message }));
+    .catch((error) => res.status(404).json({ error: error.message }));
 };
 
 //Post Usuario
@@ -55,7 +54,7 @@ exports.insertUsuario = (req, res) => {
   usuario
     .save()
     .then((data) => res.json(data))
-    .catch((error) => res.json({ message: error }));
+    .catch((error) => res.status(400).json({ message: error }));
 };
 
 //Put un Usuario
@@ -63,8 +62,7 @@ exports.updateUsuario = (req, res) => {
   const { id } = req.params;
 
   if (id === undefined || id === "") {
-    // Si no se proporciona un email, enviamos una respuesta con un estado 400 y un mensaje de error
-    res.status(400).json({ message: "No se ha encontrado usuario" });
+    res.status(404).json({ message: "No se ha encontrado usuario" });
     return;
   }
 
@@ -97,7 +95,6 @@ exports.deleteUsuario = (req, res) => {
   const { id } = req.params;
 
   if (id === undefined || id === "") {
-    // Si no se proporciona un email, enviamos una respuesta con un estado 400 y un mensaje de error
     res.status(400).json({ message: "No se ha encontrado usuario" });
     return;
   }
@@ -110,5 +107,5 @@ exports.deleteUsuario = (req, res) => {
       res.json(data);
     }
   })
-  .catch((error) => res.status(500).json({ error: error.message }));
+  .catch((error) => res.status(500).json({ message: "No se ha podido eliminar" }));
 };
