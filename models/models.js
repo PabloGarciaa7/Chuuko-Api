@@ -9,7 +9,7 @@ const Usuario = mongoose.model(
     telefono: {
       type: Number,
       unique: true,
-      required: true,
+      required: [true, 'Teléfono es obligatorio'] ,
       validate: {
         validator: function (value) {
           const telefonoRegex = /^[0-9]{9}$/;
@@ -21,7 +21,7 @@ const Usuario = mongoose.model(
     email: {
       type: String,
       unique: true,
-      required: true,
+      required: [true, 'Email es obligatorio'] ,
       validate: {
         validator: function (value) {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,17 +43,17 @@ const Producto = mongoose.model(
     },
     descripcion: {
       type: String,
-      required: true,
+      required: [true, 'Descripción es obligatorio'] ,
     },
     precio: {
       type: Number,
-      required: true,
+      required: [true, 'Precio es obligatorio'] ,
     },
     imagen: String,
     idCategoria: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "Categoria",
-      required: true,
+      required: [true, 'Categoria es obligatorio'] ,
     },
     estado: {
       type: String,
