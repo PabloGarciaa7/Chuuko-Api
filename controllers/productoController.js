@@ -50,6 +50,7 @@ exports.selectProducto = (req, res) => {
   Producto.findOne({_id : id})
     .populate("idCategoria")
     .populate("idUsuarioVendedor")
+    .populate("idUsuarioComprador")
     .then((data) => {
       console.log(data);
       if (!data) {
