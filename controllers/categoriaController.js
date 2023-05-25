@@ -15,7 +15,7 @@ exports.selectCategoriaPorId = (req, res) => {
     return;
   }
 
-  Categoria.findOne(id)
+  Categoria.findOne({_id : id})
   .then((data) => {
     if (!data) {
       res.status(400).json({message: "No se encontró ninguna categoría"})
