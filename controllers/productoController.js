@@ -104,7 +104,7 @@ exports.updateProducto = (req, res) => {
   const { id } = req.params;
 
   if (id === undefined || id === "") {
-    res.status(400).json({ message: "No se encontró ningun producto" });
+    res.status(400).json({ message: "No se encontró ningún producto" });
     return;
   }
 

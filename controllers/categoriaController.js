@@ -8,7 +8,7 @@ exports.selectCategorias = (req, res) =>
 
 //Get de una categoría
 exports.selectCategoriaPorId = (req, res) => {
-  const { id } = req.params.id;
+  const { id } = req.params;
 
   if (id === undefined || id === "") {
     res.status(400).json({message: "No se encontró ningun categoría"});
@@ -37,10 +37,17 @@ exports.insertCategoria = (req, res) => {
 
 //Put de una categoría
 exports.updateCategoria = (req, res) => {
-  const categoria = new Categoria(req.body);
-  categoria
-    .findOneAndUpdate(
-      { id },
+  const { id } = req.params;
+  
+  if (id === undefined || id === "") {
+    res.status(400).json({ message: "No se encontró ninguna Categoría" });
+    return;
+  }
+
+  const {nombreCategoria} = req.body;
+
+  Categoria.findOneAndUpdate(
+      { _id:id  },
       {
         $set: {
           nombreCategoria,
